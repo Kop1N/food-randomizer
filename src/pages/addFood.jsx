@@ -48,6 +48,21 @@ function AddFood() {
     }
   };
 
+  const handleUpdateRow = (index) => {
+    if (!selectedCategory) return;
+    if (!foodName.trim() || !foodCost.trim()) {
+      setMessage("Enter both food name and cost before updating.");
+      return;
+    }
+
+    updateFood(selectedCategory, index, foodName.trim(), foodCost);
+    refreshFoods();
+    setMessage(`Updated ${foodName.trim()} in ${selectedCategory}.`);
+    setEditingIndex(null);
+    setFoodName("");
+    setFoodCost("");
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -125,12 +140,23 @@ function AddFood() {
                     <div style={{ color: "#6b7280" }}>₱{item.price.toFixed(2)}</div>
                   </div>
                   <div style={{ display: "flex", gap: "8px" }}>
-                    <button type="button" onClick={() => startEdit(index)} style={{ padding: "10px 14px" }}>
-                      Edit
-                    </button>
-                    <button type="button" onClick={() => handleDelete(index)} style={{ padding: "10px 14px" }}>
-                      Delete
-                    </button>
+                    {editingIndex === index ? (
+                      <>
+                        <button type="button" disabled style={{ padding: "10px 14px", opacity: 0.6 }}>
+                          Edit
+                        </button>
+                        <button type="button" onClick={() => handleUpdateRow(index)} style={{ padding: "10px 14px" }}>
+                          Update
+                        </button>
+                        <button type="button" onClick={() => handleDelete(index)} style={{ padding: "10px 14px" }}>
+                          Delete
+                        </button>
+                      </>
+                    ) : (
+                      <button type="button" onClick={() => startEdit(index)} style={{ padding: "10px 14px" }}>
+                        Edit
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
