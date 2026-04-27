@@ -1,22 +1,19 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-
-const foodData = {
-  breakfast: ["Tapsilog", "Pandesal", "Omelette"],
-  lunch: ["Adobo", "Sinigang", "Pancit"],
-  dinner: ["Steak", "Fried Chicken", "Sisig"],
-  snack: ["Fries", "Burger", "Milk Tea"],
-  whatever: ["Pizza", "Ramen", "Jollibee"]
-};
+import { getFoods } from "../utils/foodStorage";
 
 function Food() {
   const { category } = useParams();
   const [result, setResult] = useState("Pick something");
 
   const pickFood = () => {
-    const foods = foodData[category];
+    const foods = getFoods(category);
+    if (!foods || foods.length === 0) {
+      setResult("No foods available for this category.");
+      return;
+    }
     const randomIndex = Math.floor(Math.random() * foods.length);
-    setResult(foods[randomIndex]);
+    setResult(foods[randomIndex].name);
   };
 
   return (

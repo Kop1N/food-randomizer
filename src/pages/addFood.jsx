@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { addFood, getCategories } from "../utils/foodStorage";
 
-const categories = ["breakfast", "lunch", "dinner", "snack", "whatever"];
+const categories = getCategories();
 
 function AddFood() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -22,6 +23,7 @@ function AddFood() {
       return;
     }
 
+    addFood(selectedCategory, foodName.trim(), foodCost);
     setMessage(
       `Added ${foodName.trim()} to ${selectedCategory} for ₱${parseFloat(foodCost).toFixed(2)}.`
     );

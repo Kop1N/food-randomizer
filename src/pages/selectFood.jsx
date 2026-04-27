@@ -1,36 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import pickSound from "../assets/random.mp3";
+import { getCategories, getFoods } from "../utils/foodStorage";
 
-const mealCosts = {
-  breakfast: [
-    { name: "Tapsilog", price: 120 },
-    { name: "Pandesal", price: 25 },
-    { name: "Omelette", price: 80 }
-  ],
-  lunch: [
-    { name: "Adobo", price: 150 },
-    { name: "Sinigang", price: 180 },
-    { name: "Pancit", price: 140 }
-  ],
-  dinner: [
-    { name: "Steak", price: 420 },
-    { name: "Fried Chicken", price: 220 },
-    { name: "Sisig", price: 200 }
-  ],
-  snack: [
-    { name: "Fries", price: 100 },
-    { name: "Burger", price: 160 },
-    { name: "Milk Tea", price: 110 }
-  ],
-  whatever: [
-    { name: "Pizza", price: 320 },
-    { name: "Ramen", price: 250 },
-    { name: "Jollibee", price: 180 }
-  ]
-};
-
-const categories = Object.keys(mealCosts);
+const categories = getCategories();
 
 function SelectFood() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -56,7 +29,7 @@ function SelectFood() {
       // ignore autoplay issues if browser blocks sound
     });
 
-    const choices = mealCosts[selectedCategory];
+    const choices = getFoods(selectedCategory);
     setIsPicking(true);
     setSelectedFood(null);
     setMessage("Selecting a meal...");
@@ -102,9 +75,9 @@ function SelectFood() {
             {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} options
           </h2>
           <div style={{ display: "grid", gap: "10px", marginBottom: 20 }}>
-            {mealCosts[selectedCategory].map((item, index) => (
+            {getFoods(selectedCategory).map((item, index) => (
               <div
-                key={item.name}
+                key={`${item.name}-${index}`}
                 style={{
                   padding: "14px 16px",
                   borderRadius: 16,
