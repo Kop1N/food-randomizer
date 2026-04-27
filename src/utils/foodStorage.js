@@ -91,3 +91,53 @@ export function addFood(category, name, price) {
   writeStorage(updated);
   return updated;
 }
+
+export function updateFood(category, index, name, price) {
+  const normalizedCategory = category?.toLowerCase();
+  if (!normalizedCategory || !DEFAULT_FOODS[normalizedCategory]) {
+    throw new Error("Invalid category");
+  }
+
+  const foods = readStorage();
+  const existing = foods[normalizedCategory] || [];
+  if (index < 0 || index >= existing.length) {
+    throw new Error("Invalid food index");
+  }
+
+  const nextPrice = typeof price === "string" ? parseFloat(price) : price;
+  const updatedItem = {
+    name: name.trim(),
+    price: Number.isNaN(nextPrice) ? 0 : Number(nextPrice)
+  };
+
+  const updatedCategory = existing.map((item, idx) => (idx === index ? updatedItem : item));
+  const updated = {
+    ...foods,
+    [normalizedCategory]: updatedCategory
+  };
+
+  writeStorage(updated);
+  return updated;
+}
+
+export function deleteFood(category, index) {
+  const normalizedCategory = category?.toLowerCase();
+  if (!normalizedCategory || !DEFAULT_FOODS[normalizedCategory]) {
+    throw new Error("Invalid category");
+  }
+
+  const foods = readStorage();
+  const existing = foods[normalizedCategory] || [];
+  if (index < 0 || index >= existing.length) {
+    throw new Error("Invalid food index");
+  }
+
+  const updatedCategory = existing.filter((_, idx) => idx !== index);
+  const updated = {
+    ...foods,
+    [normalizedCategory]: updatedCategory
+  };
+
+  writeStorage(updated);
+  return updated;
+}
